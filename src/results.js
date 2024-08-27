@@ -25,7 +25,7 @@ const resultTypesWithEmoji = zip(
 
 
 const generateDetailMessage = (label, code) => {
-  return '<details>\n<summary>' + label + '</summary>\n\n```\n' + code + '\n```\n\n</details>\n';
+  return '<details>\n<summary><code>' + label + '</code></summary>\n\n```\n' + code + '\n```\n\n</details>\n';
 }
 
 
@@ -65,7 +65,6 @@ async function postResults(xmls, inputs) {
     inputs.githubToken,
     message,
   )
-  await gha.summary.write();
 }
 
 async function extractResults(xmls) {

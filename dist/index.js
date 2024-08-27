@@ -37254,7 +37254,6 @@ const { parseXmlFiles } = __nccwpck_require__(8693);
 const { postResults } = __nccwpck_require__(3188);
 
 async function main(inputs) {
-  const token = gha.getInput("github-token", { required: true });
   var xmls = parseXmlFiles(inputs.path);
 
   const { isEmpty, generator } = await checkAsyncGeneratorEmpty(xmls);
@@ -37266,7 +37265,7 @@ async function main(inputs) {
   xmls = generator;
 
 
-  await postResults(xmls, inputs, token);
+  await postResults(xmls, inputs);
 }
 
 
@@ -37302,7 +37301,7 @@ const resultTypesWithEmoji = zip(
 
 
 const generateDetailMessage = (label, code) => {
-  return '<details>\n<summary>' + label + '</summary>\n\n```\n' + code + '\n```\n\n</details>\n';
+  return '<details>\n<summary><code>' + label + '</code></summary>\n\n```\n' + code + '\n```\n\n</details>\n';
 }
 
 
@@ -37342,7 +37341,6 @@ async function postResults(xmls, inputs) {
     inputs.githubToken,
     message,
   )
-  await gha.summary.write();
 }
 
 async function extractResults(xmls) {

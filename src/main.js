@@ -6,7 +6,6 @@ const { parseXmlFiles } = require("./io");
 const { postResults } = require("./results");
 
 async function main(inputs) {
-  const token = gha.getInput("github-token", { required: true });
   var xmls = parseXmlFiles(inputs.path);
 
   const { isEmpty, generator } = await checkAsyncGeneratorEmpty(xmls);
@@ -18,5 +17,5 @@ async function main(inputs) {
   xmls = generator;
 
 
-  await postResults(xmls, inputs, token);
+  await postResults(xmls, inputs);
 }
