@@ -10,6 +10,10 @@ runs:
   main: dist/index.js
 
 inputs:
+  github-token:
+    description: GitHub Access Token
+    default: ${{ github.token }}
+    required: true
   path:
     description: |
       A list of JUnit XML files, directories containing the former, and wildcard 

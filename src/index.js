@@ -9,6 +9,7 @@ async function entrypoint() {
 
 function getInputs() {
   return {
+    githubToken: gha.getInput("github-token", { required: true }),
     path: gha.getInput("path", { required: true }),
     summary: gha.getBooleanInput("summary", {
       required: false,

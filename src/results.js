@@ -53,7 +53,7 @@ const generateMessage = (results, title, displayOptions) => {
   return message;
 }
 
-async function postResults(xmls, inputs, githubToken) {
+async function postResults(xmls, inputs) {
   const results = await extractResults(xmls);
   if (results.total_tests == 0) {
     return;
@@ -62,7 +62,7 @@ async function postResults(xmls, inputs, githubToken) {
   message = generateMessage(results, inputs.title, inputs.displayOptions);
 
   addPullRequestComment(
-    token,
+    inputs.githubToken,
     message,
   )
   await gha.summary.write();
