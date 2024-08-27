@@ -1,4 +1,5 @@
 const fs = require("fs").promises;
+const { decode } = require('html-entities');
 
 const gha = require("@actions/core");
 
@@ -50,8 +51,10 @@ const generateMessage = (results, title, displayOptions) => {
     }
     message += '\n\n';
   }
-  return message;
+
+  return decode(message);
 }
+
 
 async function postResults(xmls, inputs) {
   const results = await extractResults(xmls);
