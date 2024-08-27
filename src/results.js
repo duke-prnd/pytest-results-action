@@ -3,6 +3,7 @@ const fs = require("fs").promises;
 const gha = require("@actions/core");
 
 const { zip, prettyDuration } = require("./utils");
+const { addPullRequestComment } = require("./github");
 
 module.exports = { postResults };
 
@@ -22,13 +23,48 @@ const resultTypesWithEmoji = zip(
   )
 );
 
-async function postResults(xmls, inputs) {
+
+const generateDetailMessage = (label, code) => {
+  return '<details>\n<summary>' + label + '</summary>\n\n```\n' + code + '\n```\n\n</details>\n';
+}
+
+
+const generateMessage = (results, title, displayOptions) => {
+
+  let message = `# ${title}\n\n`;
+  for (resultType of getResultTypesFromDisplayOptions(displayOptions)) {
+    const results_for_type = results[resultType];
+    if (!results_for_type.length) {
+      continue;
+    }
+
+    message += `## ${resultType}\n\n`;
+
+    for (const result of results_for_type) {
+      if (result.msg) {
+        message += generateDetailMessage(result.id, result.msg);
+      } else {
+        message += `\n:heavy_check_mark: ${result.id}`;
+      }
+      message += '\n';
+    }
+    message += '\n\n';
+  }
+  return message;
+}
+
+async function postResults(xmls, inputs, githubToken) {
   const results = await extractResults(xmls);
   if (results.total_tests == 0) {
     return;
   }
 
-  addResults(results, inputs.title, inputs.summary, inputs.displayOptions);
+  message = generateMessage(results, inputs.title, inputs.displayOptions);
+
+  addPullRequestComment(
+    token,
+    message,
+  )
   await gha.summary.write();
 }
 
